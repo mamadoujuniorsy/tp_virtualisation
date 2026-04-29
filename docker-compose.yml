@@ -34,7 +34,7 @@ services:
     container_name: dic2iabd_app_mamadou
     restart: always
     ports:
-      - "8742:3000"
+      - "8087:3000"
     env_file:
       - .env
     environment:
