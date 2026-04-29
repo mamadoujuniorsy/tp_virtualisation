@@ -4,7 +4,7 @@ services:
   # Service de base de données MySQL
   db:
     image: mysql:8.0
-    container_name: dic2iabd_mysql
+    container_name: dic2iabd_mysql_mamadou
     restart: always
     env_file:
       - .env
@@ -13,13 +13,13 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       # Persistance des données MySQL
-      - mysql_data:/var/lib/mysql
+      - mysql_data_mamadou:/var/lib/mysql
       # Script d'initialisation
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3847:3306"
     networks:
-      - dic2iabd_network
+      - dic2iabd_network_mamadou
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
       interval: 10s
@@ -31,7 +31,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: dic2iabd_app
+    container_name: dic2iabd_app_mamadou
     restart: always
     ports:
       - "8742:3000"
@@ -47,13 +47,13 @@ services:
       db:
         condition: service_healthy
     networks:
-      - dic2iabd_network
+      - dic2iabd_network_mamadou
 
 # Réseau pour la communication entre conteneurs
 networks:
-  dic2iabd_network:
+  dic2iabd_network_mamadou:
     driver: bridge
 
 # Volume pour la persistance des données MySQL
 volumes:
-  mysql_data:
+  mysql_data_mamadou:
