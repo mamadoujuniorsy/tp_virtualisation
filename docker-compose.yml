@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Service de base de données MySQL
+  db:
+    image: mysql:8.0
+    container_name: dic2iabd_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: dic2iabd_db
+    volumes:
+      # Persistance des données MySQL
+      - mysql_data:/var/lib/mysql
+      # Script d'initialisation
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3847:3306"
+    networks:
+      - dic2iabd_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Service de l'application (Frontend + Backend)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dic2iabd_app
+    restart: always
+    ports:
+      - "8742:3000"
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: dic2iabd_db
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dic2iabd_network
+
+# Réseau pour la communication entre conteneurs
+networks:
+  dic2iabd_network:
+    driver: bridge
+
+# Volume pour la persistance des données MySQL
+volumes:
+  mysql_data:

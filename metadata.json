@@ -1,0 +1,7 @@
+{
+  "name": "DIC2IABD",
+  "description": "Plateforme d'analyse d'images et de détection d'objets avec historique centralisé.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
